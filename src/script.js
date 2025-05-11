@@ -87,7 +87,16 @@ class todoApp {
 
             //siham
             if(name.toLowerCase() === 'siham'){
-                alert("Welcome Siham! it's a pleasure that you're testing me yourself, thank you!\n Be happy!");
+                alert("Welcome Siham! it's a pleasure that you're testing me yourself.");
+                let a = prompt("To ensure that you're tell me the secret word:\n Hint: a word you always say!");
+                if(a.toLowerCase() === 'shibal'){
+                    alert("Correct! you're really the one!");
+                    alert("Happy that you're here!");
+                    alert("Always be happy!");
+                    alert("with or without me haha!");
+                    alert("let me be by your side for the longest time possible, hopefully forever!");
+                    alert("Thank you!");
+                }
             }
                          
             this.renderModalTags();
