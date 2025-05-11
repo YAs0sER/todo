@@ -58,11 +58,13 @@ class todoApp {
         });
 
         this.cancelAdd.addEventListener('click', () => {
+            this.resetTaskForm();
             this.addModal.classList.add('hidden');
         });
 
         this.addModal.addEventListener('click', (e) => {
             if (e.target === this.addModal) {
+                this.resetTaskForm();
                 this.addModal.classList.add('hidden');
             }
         });
@@ -83,7 +85,11 @@ class todoApp {
             this.addTag(new tag(name, color));
             nameInput.value = "";
 
-            
+            //siham
+            if(name.toLowerCase() === 'siham'){
+                alert("Welcome Siham! it's a pleasure that you're testing me yourself, thank you!\n Be happy!");
+            }
+                         
             this.renderModalTags();
             this.renderTagFilters();
 
@@ -468,7 +474,7 @@ class todoApp {
         }
     }
     clear(){
-        if(confirm("Want you empty all app data?")){
+        if(confirm("Want you clear all app data?")){
             this.tasks = [];
             this.tags = [];
             this.saveToLocalStorage();
@@ -476,6 +482,14 @@ class todoApp {
             this.renderTagFilters();
         }
     }
+    resetTaskForm(){
+        this.taskForm.reset();
+        const submitBtn = this.taskForm.querySelector('input[type="submit"]');
+        submitBtn.value = 'Add';
+        this.selectedTagNames = [];
+    }
+
+    
 }
 
 // Instantiate app
