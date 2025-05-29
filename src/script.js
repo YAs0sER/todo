@@ -1034,6 +1034,11 @@ class PomodoroTimer {
         const closePomodoroBtn = document.getElementById('closePomodoroBtn');
         if (openPomodoroBtn) {
             openPomodoroBtn.addEventListener('click', () => this.openModal());
+            openPomodoroBtn.addEventListener('keydown', (e) => {
+                if(e.key == 'p' && e.altKey){
+                    this.openModal();
+                }
+            });
         }
         if (closePomodoroBtn) {
             closePomodoroBtn.addEventListener('click', () => this.closeModal());
@@ -1055,6 +1060,13 @@ class PomodoroTimer {
         document.addEventListener('keydown', (e) => {
             const modal = document.getElementById('pomoModal');
             if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                this.closeModal();
+            }
+        });
+        const modalE = document.getElementById('pomoModal');
+        modalE.addEventListener('click', (e) => {
+            
+            if (e.target === modalE && !modalE.classList.contains('hidden')) {
                 this.closeModal();
             }
         });
