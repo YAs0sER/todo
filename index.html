@@ -1,403 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link href="./tailStyle.css" rel="stylesheet" />
-		<title>todo</title>
-		<link rel="icon" type="image/x-icon" href="/src/icons/checklist (1).png">
-	</head>
-	<body class="bg-white m-0 flex flex-col md:grid md:grid-cols-[20vw_1fr] md:grid-rows-[50px_1fr] h-screen font-display">
-		<!-- Header -->
-		<header class="h-[70px] flex items-center justify-between p-7 md:col-span-2">
-			<!--Title-->
-			<h2 class="mr-auto text-3xl relative left-3.5 select-none" id="appName">todo</h2>
-			<!--Icons-->
-			<div class="flex gap-1.5">
-				<button class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100" id="openPomodoro" aria-label="Add new task">
-                  <img src="../src/icons/pomodoro (1).png" alt="pomoIcon" width="20px" height="20px">
-				</button>
-				<button class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100" id="toggleEisenView" aria-label="toggle Eisenhower">
-					<svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.03v13m0-13c-2.819-.831-4.715-1.076-8.029-1.023A.99.99 0 0 0 3 6v11c0 .563.466 1.014 1.03 1.007 3.122-.043 5.018.212 7.97 1.023m0-13c2.819-.831 4.715-1.076 8.029-1.023A.99.99 0 0 1 21 6v11c0 .563-.466 1.014-1.03 1.007-3.122-.043-5.018.212-7.97 1.023"/>
-					</svg>
-				</button>
-				<button id='sort-btn' class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100"> 
-				</button>
-				<div id="sort-dropdown" class="hidden absolute top-[50px] right-0 mt-2 bg-white rounded shadow-md z-10 w-48">
-					<button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="date">Creation date</button>
-					<button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="title">Title</button>
-					<button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="deadline">Deadline</button>
-					<button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="priority">Priority</button>
-				</div>
-				<button class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100" id="addNew" aria-label="Add new task">
-					<svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-					</svg>
-				</button>
-				
-			</div>
-		</header>
-		<!-- Sidebar -->
-		<aside class="w-full md:w-[20vw] flex flex-col md:justify-between pt-3 px-4 md:row-span-1 md:h-auto overflow-y-auto max-h-[calc(100vh-50px)] scrollbar-none">
-			<!-- Filters: Tags -->
-			<div class="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible whitespace-nowrap scrollbar-none p-2 md:p-0" id="tag-filters">
-			</div>
-			<div>
-				<!--Progress Bar-->
-				<div class="w-[75%] mt-0 mb-2 justify-self-center">
-					<div class="flex justify-between mb-1">
-						<span class="text-sm font-medium text-gray-700">Progress</span>
-						<span id="progressText" class="text-sm font-medium text-gray-700">0%</span>
-					</div>
-					<div class="w-full bg-gray-200 rounded-full h-3">
-						<div id="progressBar" class="bg-[#DAF2D2] h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
-					</div>
-				</div>
-				<!-- Filters: status -->
-				<div class="p-2 md:p-0 mt-4 md:mt-0 md:mb-5 md:pt-5 flex gap-2 overflow-x-auto md:flex-col md:overflow-visible whitespace-nowrap scrollbar-none justify-center md:justify-start" id="status-filter">
-					<button class="cursor-pointer shrink-0 py-2 px-3 flex items-center gap-2 border-0 hover:bg-gray-200 rounded-2xl" data-status="all">
-						<div class="bg-[#D2CEFF] w-[25px] h-[25px] rounded-full shrink-0"></div>
-						<span class="text-[15px]">All</span>
-						<span class="text-[12px] text-gray-500" id="all-count">0</span>
-					</button>
-					<button class="cursor-pointer shrink-0 py-2 px-3 flex items-center gap-2 border-0 hover:bg-gray-200 rounded-2xl" data-status="done">
-						<div class="bg-[#DAF2D2] w-[25px] h-[25px] rounded-full shrink-0"></div>
-						<span class="text-[15px]">Done</span>
-						<span class="text-[12px] text-gray-500" id="done-count">0</span>
-					</button>
-					<button class="cursor-pointer shrink-0 py-2 px-3 flex items-center gap-2 border-0 hover:bg-gray-200 rounded-2xl" data-status="on going">
-						<div class="bg-[#FFCECE] w-[25px] h-[25px] rounded-full shrink-0"></div>
-						<span class="text-[15px]">On going</span>
-						<span class="text-[12px] text-gray-500" id="ongoing-count">0</span>
-					</button>
-				</div>
-			</div>
-		</aside>
-		<!-- Main -->
-		<main class="flex-1 p-4 md:row-start-2 md:col-start-2 overflow-auto pt-5" id="container">
-		</main>
-		<!-- Add and Edit Modal -->
-		<div id="addModal" class="hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-[rgba(0,0,0,0.4)] flex justify-center items-center">
-			<div class="w-full h-full md:w-[60%] md:h-auto bg-white p-6 md:p-10 border-1 border-[#888] border-solid rounded-none md:rounded-xl overflow-y-auto">
-				<form id="NewTaskForm">
-					<div class="pt-3 pb-8 flex justify-between">
-						<button type="button" id="cancelBtn" class="border-0 cursor-pointer text-[#69665C]">Cancel</button>
-						<input type="submit" value="Add" class="bg-[#69665C] text-white px-4 py-2 rounded-2xl w-[150px] cursor-pointer" />
-					</div>
-					<!--Basic Information-->
-					<div class="pt-2">
-						<label for="taskTitle">Task title</label><br />
-						<input type="text" name="title" id="taskTitle" placeholder="Enter" class="bg-[#f9f9f7] px-2 py-1.5 rounded-[12px] placeholder:pr-3 w-[95%]" required /><br /><br />
-						<label for="description">Description</label><br />
-						<textarea name="description" id="description" cols="40" rows="3" placeholder="Task description" class="bg-[#f9f9f7] px-2 py-1.5 rounded-[12px] placeholder:pr-3 w-[95%] resize-none"></textarea>
-					</div>
-					<!--Due date-->
-					<div class="flex flex-col md:flex-row md:items-center md:justify-between">
-						<div>
-							<!--Classification: Eisenhower, importance-->
-							<h3 class="mt-6 mb-0 font-medium">Classification</h3>
-							<div class="pt-1 ml-3 flex items-center gap-9">
-								<label for="isUrgent" class="mr-4"><input type="checkbox" name="isUrgent" id="isUrgent"> Urgent</label>
-								<label for="isImportant" class=""><input type="checkbox" name="isImportant" id="isImportant"> Important</label>
-							</div>
-						</div>
-						<div class="mr-5">
-							<!--Due date-->
-							<h3 class="mt-6 mb-0 font-medium">Due date</h3>
-							<input type="date" id="dueDate" name="dueDate" 
-								class="bg-[#f9f9f7] px-2 py-1.5 rounded-[12px] w-[95%]">
-						</div>
-					</div>
-					<h3 class="mt-6 mb-2 font-medium">Tags</h3>
-					<div id="modalTags" class="flex flex-wrap gap-3 mb-4">
-						<p>No tags for now</p>
-						<button type="button" id="showAddtag" class="cursor-pointer flex items-center justify-center gap-1 bg-[#69665C] text-white ml-3 px-3 py-2 rounded-full hover:bg-[#5e5b52] w-[25px] h-[25px]">
-							<span class="text-lg">
-								<svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-								</svg>
-							</span>
-						</button>
-					</div>
-					<div class="flex flex-wrap items-center  gap-3 mb-4 hidden" id="addNewtagForm">
-						<input type="text" id="newTagName" placeholder="Tag name" class="px-3 py-2 rounded-xl bg-gray-100" />
-						<input type="color" id="newTagColor" value="#DAF2D6" class="w-10 h-10 p-1 rounded-full border border-gray-300 cursor-pointer" />
-						<button type="button" id="addTagBtn" class="flex items-center justify-center gap-1 bg-[#69665C] text-white ml-3 px-3 py-2 rounded-xl hover:bg-[#5e5b52]">
-							<span class="text-xs">
-								<svg class="w-2 h-2 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-									<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-								</svg>
-							</span>
-							Add Tag
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-		<!--Keyboard shortcuts modal-->
-		<div id="helpModal" class="hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-[rgba(0,0,0,0.4)] flex justify-center items-center">
-  <div class="w-full h-full md:w-[700px] md:h-auto bg-white p-6 md:p-8 border-1 border-[#888] border-solid rounded-none md:rounded-xl overflow-y-auto">
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-medium">Keyboard Shortcuts</h2>
-      <button id="closeHelpBtn" class="text-gray-500 hover:text-gray-800 text-xl font-bold cursor-pointer">
-        &times;
-      </button>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-      <!-- Left Column -->
-      <div>
-        <!-- Task Management -->
-        <div class="mb-4">
-          <h3 class="text-lg font-medium text-gray-700 border-b border-gray-200 pb-1 mb-3">Task Management</h3>
-          
-          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3">
-            <div class="flex items-center gap-1">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Alt</kbd>
-              <span>+</span>
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">N</kbd>
-            </div>
-            <div>Add new task</div>
-            
-            <div class="flex items-center gap-1">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd>
-              <span>+</span>
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Enter</kbd>
-            </div>
-            <div>Save and add task</div>
-            
-            <div class="flex items-center">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Esc</kbd>
-            </div>
-            <div>Close modal</div>
-          </div>
-        </div>
-        
-        <!-- Tag Management -->
-        <div class="mb-4">
-          <h3 class="text-lg font-medium text-gray-700 border-b border-gray-200 pb-1 mb-3">Tag Management</h3>
-          
-          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3">
-            <div class="flex items-center">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">T</kbd>
-            </div>
-            <div>Toggle add tag form</div>
-            
-            <div class="flex items-center">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Enter</kbd>
-            </div>
-            <div>Add new tag</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Right Column -->
-      <div>
-        <!-- Filtering and Views -->
-        <div class="mb-4">
-          <h3 class="text-lg font-medium text-gray-700 border-b border-gray-200 pb-1 mb-3">Filtering and Views</h3>
-          
-          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3">
-            <div class="flex items-center">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">1</kbd>
-            </div>
-            <div>Show all tasks</div>
-            
-            <div class="flex items-center">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">2</kbd>
-            </div>
-            <div>Show completed tasks</div>
-            
-            <div class="flex items-center">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">3</kbd>
-            </div>
-            <div>Show ongoing tasks</div>
-            
-            <div class="flex items-center gap-1">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Alt</kbd>
-              <span>+</span>
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">E</kbd>
-            </div>
-            <div>Toggle Eisenhower view</div>
-
-            <div class="flex items-center">
-              <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">F1</kbd>
-            </div>
-            <div>Show this help dialog</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="mt-6 pt-4 border-t border-gray-200 text-center">
-      <p class="text-sm text-gray-600">
-        Hit <kbd class="px-1.5 py-0.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded">Esc</kbd> to close this dialog
-      </p>
-    </div>
-  </div>
-</div>
-
-<!--PomoModal-->
-<div id="pomoModal" class="hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-[rgba(0,0,0,0.4)] flex justify-center items-center">
-    <div class="w-full h-full md:w-[60%] md:h-auto bg-white p-6 md:p-10 border-1 border-[#888] border-solid rounded-none md:rounded-xl overflow-y-auto">
-      <!--Header-->
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex gap-2 justify-center items-center">
-                <span>
-                  <img src="../src/icons/pomodoro.png" alt="pomoIcon" width="25px" height="25px">
-                </span>
-                <h2 class="text-xl font-medium text-gray-800" id="modalTitle">PomoTimer</h2>
-            </div>
-                <button id="closePomodoroBtn" class="text-gray-500 hover:text-gray-800 text-xl font-bold cursor-pointer">
-                    &times;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="./tailStyle.css" rel="stylesheet" />
+        <title>todo</title>
+        <link rel="icon" type="image/x-icon" href="/src/icons/todoIcon.ico">
+    </head>
+    <body class="bg-white m-0 flex flex-col md:grid md:grid-cols-[20vw_1fr] md:grid-rows-[50px_1fr] h-screen font-display">
+        <!-- Header -->
+        <header class="h-[70px] flex items-center justify-between p-7 md:col-span-2">
+            <!--Title-->
+            <h2 class="mr-auto text-3xl relative left-3.5 select-none" id="appName">todo</h2>
+            <!--Icons-->
+            <div class="flex gap-1.5">
+                <button class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100" id="openPomodoro" aria-label="Add new task">
+                <img src="./src/icons/pomodoroIcon.png" alt="pomoIcon" width="20px" height="20px">
                 </button>
-        </div>
-        <!--Selection phase-->
-        <div id="taskSelectionPhase" class="fade-in">
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-700 mb-4">Choose a task to focus on:</h3>
-                    <div class="space-y-3 max-h-60 overflow-y-auto">
-                        <!-- Sample tasks - in real implementation, these would be generated dynamically -->
-                        
+                <button class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100" id="toggleEisenView" aria-label="toggle Eisenhower">
+                    <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.03v13m0-13c-2.819-.831-4.715-1.076-8.029-1.023A.99.99 0 0 0 3 6v11c0 .563.466 1.014 1.03 1.007 3.122-.043 5.018.212 7.97 1.023m0-13c2.819-.831 4.715-1.076 8.029-1.023A.99.99 0 0 1 21 6v11c0 .563-.466 1.014-1.03 1.007-3.122-.043-5.018.212-7.97 1.023"/>
+                    </svg>
+                </button>
+                <button id='sort-btn' class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100"> 
+                </button>
+                <div id="sort-dropdown" class="hidden absolute top-[50px] right-0 mt-2 bg-white rounded shadow-md z-10 w-48">
+                    <button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="date">Creation date</button>
+                    <button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="title">Title</button>
+                    <button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="deadline">Deadline</button>
+                    <button class="cursor-pointer block w-full px-4 py-2 text-left hover:bg-gray-100 text-gray-700 text-sm border-b border-gray-200 sort-option" data-sort="priority">Priority</button>
+                </div>
+                <button class="cursor-pointer ml-auto w-[40px] h-[40px] rounded-full border-0 text-3xl flex items-center justify-center align-middle hover:bg-amber-100" id="addNew" aria-label="Add new task">
+                    <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+        <!-- Sidebar -->
+        <aside class="w-full md:w-[20vw] flex flex-col md:justify-between pt-3 px-4 md:row-span-1 md:h-auto overflow-y-auto max-h-[calc(100vh-50px)] scrollbar-none">
+            <!-- Filters: Tags -->
+            <div class="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible whitespace-nowrap scrollbar-none p-2 md:p-0" id="tag-filters">
+            </div>
+            <div>
+                <!--Progress Bar-->
+                <div class="w-[75%] mt-0 mb-2 justify-self-center">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">Progress</span>
+                        <span id="progressText" class="text-sm font-medium text-gray-700">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="progressBar" class="bg-[#DAF2D2] h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
                     </div>
                 </div>
-                <!-- Settings preview in selection phase -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <h4 class="font-medium text-gray-700 mb-3">Timer Settings</h4>
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                            <div class="text-2xl font-bold text-red-500" id="focusTime">25</div>
-                            <div class="text-xs text-gray-600">Focus</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-green-500" id="short-break-time">5</div>
-                            <div class="text-xs text-gray-600">Short Break</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-blue-500" id="long-break-time">15</div>
-                            <div class="text-xs text-gray-600">Long Break</div>
-                        </div>
-                    </div>
+                <!-- Filters: status -->
+                <div class="p-2 md:p-0 mt-4 md:mt-0 md:mb-5 md:pt-5 flex gap-2 overflow-x-auto md:flex-col md:overflow-visible whitespace-nowrap scrollbar-none justify-center md:justify-start" id="status-filter">
+                    <button class="cursor-pointer shrink-0 py-2 px-3 flex items-center gap-2 border-0 hover:bg-gray-200 rounded-2xl" data-status="all">
+                        <div class="bg-[#D2CEFF] w-[25px] h-[25px] rounded-full shrink-0"></div>
+                        <span class="text-[15px]">All</span>
+                        <span class="text-[12px] text-gray-500" id="all-count">0</span>
+                    </button>
+                    <button class="cursor-pointer shrink-0 py-2 px-3 flex items-center gap-2 border-0 hover:bg-gray-200 rounded-2xl" data-status="done">
+                        <div class="bg-[#DAF2D2] w-[25px] h-[25px] rounded-full shrink-0"></div>
+                        <span class="text-[15px]">Done</span>
+                        <span class="text-[12px] text-gray-500" id="done-count">0</span>
+                    </button>
+                    <button class="cursor-pointer shrink-0 py-2 px-3 flex items-center gap-2 border-0 hover:bg-gray-200 rounded-2xl" data-status="on going">
+                        <div class="bg-[#FFCECE] w-[25px] h-[25px] rounded-full shrink-0"></div>
+                        <span class="text-[15px]">On going</span>
+                        <span class="text-[12px] text-gray-500" id="ongoing-count">0</span>
+                    </button>
                 </div>
-          </div>
-          <div id="timerPhase" class="hidden">
-                
-                <!-- Rotation Prompt (Mobile Portrait Only) -->
-                <div class="rotation-prompt hidden flex-col items-center justify-center text-center py-12">
-                    <div class="rotate-phone text-6xl mb-6">📱</div>
-                    <h3 class="text-xl font-medium text-gray-800 mb-4">Rotate Your Device</h3>
-                    <p class="text-gray-600 mb-6 px-4">
-                        For the best timer experience, please rotate your phone to landscape orientation.
-                    </p>
-                    <div class="flex items-center text-sm text-gray-500">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                        </svg>
-                        This helps you focus better during your session
+            </div>
+        </aside>
+        <!-- Main -->
+        <main class="flex-1 p-4 md:row-start-2 md:col-start-2 overflow-auto pt-5" id="container">
+        </main>
+        <!-- Add and Edit Modal -->
+        <div id="addModal" class="hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-[rgba(0,0,0,0.4)] flex justify-center items-center">
+            <div class="w-full h-full md:w-[60%] md:h-auto bg-white p-6 md:p-10 border-1 border-[#888] border-solid rounded-none md:rounded-xl overflow-y-auto">
+                <form id="NewTaskForm">
+                    <div class="pt-3 pb-8 flex justify-between">
+                        <button type="button" id="cancelBtn" class="border-0 cursor-pointer text-[#69665C]">Cancel</button>
+                        <input type="submit" value="Add" class="bg-[#69665C] text-white px-4 py-2 rounded-2xl w-[150px] cursor-pointer" />
                     </div>
-                </div>
-
-                <!-- Timer Content (Hidden in mobile portrait, visible in landscape/desktop) -->
-                <div class="timer-content">
-                    
-                  <!-- Session Progress -->
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-sm font-medium text-gray-700">Session Progress</span>
-                                    <span class="text-sm text-gray-500 session-info-compact" id="completedSessions">0 completed today</span>
-                                </div>
-                                <div class="flex space-x-2">
-                                    <div class="session-dot w-3 h-3 bg-red-500 rounded-full"></div>
-                                    <div class="session-dot w-3 h-3 bg-gray-300 rounded-full"></div>
-                                    <div class="session-dot w-3 h-3 bg-gray-300 rounded-full"></div>
-                                    <div class="session-dot w-3 h-3 bg-gray-300 rounded-full"></div>
-                                </div>
+                    <!--Basic Information-->
+                    <div class="pt-2">
+                        <label for="taskTitle">Task title</label><br />
+                        <input type="text" name="title" id="taskTitle" placeholder="Enter" class="bg-[#f9f9f7] px-2 py-1.5 rounded-[12px] placeholder:pr-3 w-[95%]" required /><br /><br />
+                        <label for="description">Description</label><br />
+                        <textarea name="description" id="description" cols="40" rows="3" placeholder="Task description" class="bg-[#f9f9f7] px-2 py-1.5 rounded-[12px] placeholder:pr-3 w-[95%] resize-none"></textarea>
+                    </div>
+                    <!--Due date-->
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <!--Classification: Eisenhower, importance-->
+                            <h3 class="mt-6 mb-0 font-medium">Classification</h3>
+                            <div class="pt-1 ml-3 flex items-center gap-9">
+                                <label for="isUrgent" class="mr-4"><input type="checkbox" name="isUrgent" id="isUrgent"> Urgent</label>
+                                <label for="isImportant" class=""><input type="checkbox" name="isImportant" id="isImportant"> Important</label>
                             </div>
-                    <!-- Mobile Landscape Layout -->
-                    <div class="mobile-landscape-layout md:block">
-                        <!-- Timer Display Section -->
-                        <div class="timer-display-landscape flex flex-col items-center mb-0 md:mb-6">
-                            <!-- Current phase indicator -->
-                            <div class="mb-4 mt-2">
-                                <span id="currentPhase" class="px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm font-medium session-info-compact">
-                                    Focus Time
-                                </span>
-                            </div>
-                            
-                            <!-- Circular progress timer -->
-                            <div class="relative mb-2">
-                                <svg class="progress-ring progress-ring-landscape w-48 h-48 md:w-48 md:h-48" viewBox="0 0 120 120">
-                                    <!-- Background circle -->
-                                    <circle
-                                        cx="60"
-                                        cy="60"
-                                        r="54"
-                                        stroke="#e5e7eb"
-                                        stroke-width="4"
-                                        fill="transparent"
-                                    />
-                                    <!-- Progress circle -->
-                                    <circle
-                                        id="progressCircle"
-                                        class="progress-ring-circle"
-                                        cx="60"
-                                        cy="60"
-                                        r="54"
-                                        stroke="#ef4444"
-                                        stroke-width="4"
-                                        fill="transparent"
-                                        stroke-dasharray="339.292"
-                                        stroke-dashoffset="339.292"
-                                        stroke-linecap="round"
-                                    />
+                        </div>
+                        <div class="mr-5">
+                            <!--Due date-->
+                            <h3 class="mt-6 mb-0 font-medium">Due date</h3>
+                            <input type="date" id="dueDate" name="dueDate" 
+                                class="bg-[#f9f9f7] px-2 py-1.5 rounded-[12px] w-[95%]">
+                        </div>
+                    </div>
+                    <h3 class="mt-6 mb-2 font-medium">Tags</h3>
+                    <div id="modalTags" class="flex flex-wrap gap-3 mb-4">
+                        <p>No tags for now</p>
+                        <button type="button" id="showAddtag" class="cursor-pointer flex items-center justify-center gap-1 bg-[#69665C] text-white ml-3 px-3 py-2 rounded-full hover:bg-[#5e5b52] w-[25px] h-[25px]">
+                            <span class="text-lg">
+                                <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                                 </svg>
-                                
-                                <!-- Timer text overlay -->
-                                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <div id="timerDisplay" class="text-4xl md:text-4xl font-bold text-gray-800 mb-1">25:00</div>
-                                    <div id="sessionCount" class="text-sm text-gray-500 session-info-compact">Session 1 of 4</div>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap items-center  gap-3 mb-4 hidden" id="addNewtagForm">
+                        <input type="text" id="newTagName" placeholder="Tag name" class="px-3 py-2 rounded-xl bg-gray-100" />
+                        <input type="color" id="newTagColor" value="#DAF2D6" class="w-10 h-10 p-1 rounded-full border border-gray-300 cursor-pointer" />
+                        <button type="button" id="addTagBtn" class="flex items-center justify-center gap-1 bg-[#69665C] text-white ml-3 px-3 py-2 rounded-xl hover:bg-[#5e5b52]">
+                            <span class="text-xs">
+                                <svg class="w-2 h-2 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                                </svg>
+                            </span>
+                            Add Tag
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--Keyboard shortcuts modal-->
+        <div id="helpModal" class="hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-[rgba(0,0,0,0.4)] flex justify-center items-center">
+            <div class="w-full h-full md:w-[700px] md:h-auto bg-white p-6 md:p-8 border-1 border-[#888] border-solid rounded-none md:rounded-xl overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-medium">Keyboard Shortcuts</h2>
+                    <button id="closeHelpBtn" class="text-gray-500 hover:text-gray-800 text-xl font-bold cursor-pointer">
+                    &times;
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Task Management -->
+                        <div class="mb-4">
+                            <h3 class="text-lg font-medium text-gray-700 border-b border-gray-200 pb-1 mb-3">Task Management</h3>
+                            <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3">
+                                <div class="flex items-center gap-1">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Alt</kbd>
+                                    <span>+</span>
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">N</kbd>
                                 </div>
+                                <div>Add new task</div>
+                                <div class="flex items-center gap-1">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl</kbd>
+                                    <span>+</span>
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Enter</kbd>
+                                </div>
+                                <div>Save and add task</div>
+                                <div class="flex items-center">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Esc</kbd>
+                                </div>
+                                <div>Close modal</div>
                             </div>
                         </div>
-
-                        <!-- Controls and Progress Section -->
-                        <div class="timer-controls-landscape">
-                            <!-- Timer Controls -->
-                            <div class="flex justify-center md:justify-center space-x-4 mb-6">
-                                <button id="startPauseBtn" class="bg-red-500 hover:bg-red-600 text-white font-medium transition-colors w-[50px] h-[50px] rounded-full flex justify-center items-center">
-                                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M21.4086 9.35258C23.5305 10.5065 23.5305 13.4935 21.4086 14.6474L8.59662 21.6145C6.53435 22.736 4 21.2763 4 18.9671L4 5.0329C4 2.72368 6.53435 1.26402 8.59661 2.38548L21.4086 9.35258Z" fill="#fff"/>
-</svg>
-                                </button>
-                                <button id="skipBtn" class="bg-gray-500 hover:bg-gray-700 text-white font-medium transition-colors w-[50px] h-[50px] rounded-full flex justify-center items-center">
-                                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16.6598 14.6474C18.4467 13.4935 18.4467 10.5065 16.6598 9.35258L5.87083 2.38548C4.13419 1.26402 2 2.72368 2 5.0329V18.9671C2 21.2763 4.13419 22.736 5.87083 21.6145L16.6598 14.6474Z" fill="#fff"/>
-<path d="M22.75 5C22.75 4.58579 22.4142 4.25 22 4.25C21.5858 4.25 21.25 4.58579 21.25 5V19C21.25 19.4142 21.5858 19.75 22 19.75C22.4142 19.75 22.75 19.4142 22.75 19V5Z" fill="#fff"/>
-</svg>
-                                </button>
+                        <!-- Tag Management -->
+                        <div class="mb-4">
+                            <h3 class="text-lg font-medium text-gray-700 border-b border-gray-200 pb-1 mb-3">Tag Management</h3>
+                            <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3">
+                                <div class="flex items-center">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">T</kbd>
+                                </div>
+                                <div>Toggle add tag form</div>
+                                <div class="flex items-center">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Enter</kbd>
+                                </div>
+                                <div>Add new tag</div>
                             </div>
-
-                            <!-- Selected task display -->
-                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="font-medium text-gray-800" id="selectedTaskTitle">Selected Task</h3>
-                                <p class="text-sm text-gray-600" id="selectedTaskDesc">Task description</p>
-                            </div>
-                            <button id="changeTaskBtn" class="text-sm text-blue-500 hover:text-blue-700 cursor-pointer">
-                                Change Task
-                            </button>
                         </div>
                     </div>
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Filtering and Views -->
+                        <div class="mb-4">
+                            <h3 class="text-lg font-medium text-gray-700 border-b border-gray-200 pb-1 mb-3">Filtering and Views</h3>
+                            <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3">
+                                <div class="flex items-center">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">1</kbd>
+                                </div>
+                                <div>Show all tasks</div>
+                                <div class="flex items-center">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">2</kbd>
+                                </div>
+                                <div>Show completed tasks</div>
+                                <div class="flex items-center">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">3</kbd>
+                                </div>
+                                <div>Show ongoing tasks</div>
+                                <div class="flex items-center gap-1">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Alt</kbd>
+                                    <span>+</span>
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">E</kbd>
+                                </div>
+                                <div>Toggle Eisenhower view</div>
+                                <div class="flex items-center">
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">F1</kbd>
+                                </div>
+                                <div>Show this help dialog</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-200 text-center">
+                    <p class="text-sm text-gray-600">
+                        Hit <kbd class="px-1.5 py-0.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded">Esc</kbd> to close this dialog
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!--PomoModal-->
+        <div id="pomoModal" class="hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-[rgba(0,0,0,0.4)] flex justify-center items-center">
+            <div class="w-full h-full md:w-[60%] md:h-auto bg-white p-6 md:p-10 border-1 border-[#888] border-solid rounded-none md:rounded-xl overflow-y-auto">
+                <!--Header-->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex gap-2 justify-center items-center">
+                        <span>
+                        <img src="./src/icons/pomodoro.png" alt="pomoIcon" width="25px" height="25px">
+                        </span>
+                        <h2 class="text-xl font-medium text-gray-800" id="modalTitle">PomoTimer</h2>
+                    </div>
+                    <button id="closePomodoroBtn" class="text-gray-500 hover:text-gray-800 text-xl font-bold cursor-pointer">
+                    &times;
+                    </button>
+                </div>
+                <!--Selection phase-->
+                <div id="taskSelectionPhase" class="fade-in">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-gray-700 mb-4">Choose a task to focus on:</h3>
+                        <div class="space-y-3 max-h-60 overflow-y-auto">
+                        </div>
+                    </div>
+                    <!-- Settings preview in selection phase -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-medium text-gray-700 mb-3">Timer Settings</h4>
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                                <div class="text-2xl font-bold text-red-500" id="focusTime">25</div>
+                                <div class="text-xs text-gray-600">Focus</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-green-500" id="short-break-time">5</div>
+                                <div class="text-xs text-gray-600">Short Break</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-blue-500" id="long-break-time">15</div>
+                                <div class="text-xs text-gray-600">Long Break</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="timerPhase" class="hidden">
+                    <!-- Rotation Prompt (Mobile Portrait Only) -->
+                    <div class="rotation-prompt hidden flex-col items-center justify-center text-center py-12">
+                        <div class="rotate-phone text-6xl mb-6">📱</div>
+                        <h3 class="text-xl font-medium text-gray-800 mb-4">Rotate Your Device</h3>
+                        <p class="text-gray-600 mb-6 px-4">
+                            For the best timer experience, please rotate your phone to landscape orientation.
+                        </p>
+                        <div class="flex items-center text-sm text-gray-500">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            This helps you focus better during your session
+                        </div>
+                    </div>
+                    <!-- Timer Content (Hidden in mobile portrait, visible in landscape/desktop) -->
+                    <div class="timer-content">
+                        <!-- Session Progress -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-gray-700">Session Progress</span>
+                                <span class="text-sm text-gray-500 session-info-compact" id="completedSessions">0 completed today</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <div class="session-dot w-3 h-3 bg-red-500 rounded-full"></div>
+                                <div class="session-dot w-3 h-3 bg-gray-300 rounded-full"></div>
+                                <div class="session-dot w-3 h-3 bg-gray-300 rounded-full"></div>
+                                <div class="session-dot w-3 h-3 bg-gray-300 rounded-full"></div>
+                            </div>
+                        </div>
+                        <!-- Mobile Landscape Layout -->
+                        <div class="mobile-landscape-layout md:block">
+                            <!-- Timer Display Section -->
+                            <div class="timer-display-landscape flex flex-col items-center mb-0 md:mb-6">
+                                <!-- Current phase indicator -->
+                                <div class="mb-4 mt-2">
+                                    <span id="currentPhase" class="px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm font-medium session-info-compact">
+                                    Focus Time
+                                    </span>
+                                </div>
+                                <!-- Circular progress timer -->
+                                <div class="relative mb-2">
+                                    <svg class="progress-ring progress-ring-landscape w-48 h-48 md:w-48 md:h-48" viewBox="0 0 120 120">
+                                        <!-- Background circle -->
+                                        <circle
+                                            cx="60"
+                                            cy="60"
+                                            r="54"
+                                            stroke="#e5e7eb"
+                                            stroke-width="4"
+                                            fill="transparent"
+                                            />
+                                        <!-- Progress circle -->
+                                        <circle
+                                            id="progressCircle"
+                                            class="progress-ring-circle"
+                                            cx="60"
+                                            cy="60"
+                                            r="54"
+                                            stroke="#ef4444"
+                                            stroke-width="4"
+                                            fill="transparent"
+                                            stroke-dasharray="339.292"
+                                            stroke-dashoffset="339.292"
+                                            stroke-linecap="round"
+                                            />
+                                    </svg>
+                                    <!-- Timer text overlay -->
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                        <div id="timerDisplay" class="text-4xl md:text-4xl font-bold text-gray-800 mb-1">25:00</div>
+                                        <div id="sessionCount" class="text-sm text-gray-500 session-info-compact">Session 1 of 4</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Controls and Progress Section -->
+                            <div class="timer-controls-landscape">
+                                <!-- Timer Controls -->
+                                <div class="flex justify-center md:justify-center space-x-4 mb-6">
+                                    <button id="startPauseBtn" class="bg-red-500 hover:bg-red-600 text-white font-medium transition-colors w-[50px] h-[50px] rounded-full flex justify-center items-center">
+                                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M21.4086 9.35258C23.5305 10.5065 23.5305 13.4935 21.4086 14.6474L8.59662 21.6145C6.53435 22.736 4 21.2763 4 18.9671L4 5.0329C4 2.72368 6.53435 1.26402 8.59661 2.38548L21.4086 9.35258Z" fill="#fff"/>
+                                        </svg>
+                                    </button>
+                                    <button id="skipBtn" class="bg-gray-500 hover:bg-gray-700 text-white font-medium transition-colors w-[50px] h-[50px] rounded-full flex justify-center items-center">
+                                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16.6598 14.6474C18.4467 13.4935 18.4467 10.5065 16.6598 9.35258L5.87083 2.38548C4.13419 1.26402 2 2.72368 2 5.0329V18.9671C2 21.2763 4.13419 22.736 5.87083 21.6145L16.6598 14.6474Z" fill="#fff"/>
+                                            <path d="M22.75 5C22.75 4.58579 22.4142 4.25 22 4.25C21.5858 4.25 21.25 4.58579 21.25 5V19C21.25 19.4142 21.5858 19.75 22 19.75C22.4142 19.75 22.75 19.4142 22.75 19V5Z" fill="#fff"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <!-- Selected task display -->
+                                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="font-medium text-gray-800" id="selectedTaskTitle">Selected Task</h3>
+                                            <p class="text-sm text-gray-600" id="selectedTaskDesc">Task description</p>
+                                        </div>
+                                        <button id="changeTaskBtn" class="text-sm text-blue-500 hover:text-blue-700 cursor-pointer">
+                                        Change Task
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-    </div>
-  </div>
-		<!-- JS Logic -->
-		<script src="./src/script.js"></script>
-	</body>
+        </div>
+        <!-- JS Logic -->
+        <script src="./src/script.js"></script>
+    </body>
 </html>
