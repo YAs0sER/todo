@@ -1108,7 +1108,7 @@ class PomodoroTimer {
             taskContainer.innerHTML = `
                 <div class="text-center py-8 text-gray-500">
                     <p class="mb-4">No tasks available. Add some tasks to get started!</p>
-                    <button id="addTaskFromPomodoro" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    <button id="addTaskFromPomodoro" class="px-4 py-2 bg-[#69665C] text-white rounded-lg hover:bg-[#55524a] transition-colors">
                         Add New Task
                     </button>
                 </div>
