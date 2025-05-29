@@ -16,7 +16,6 @@ class Task {
         this.isImportant = false;
         this.createdAt = new Date();
         this.dueDate = null;
-
         this.pomodoroSessions = 0; // Track completed pomodoro sessions
         this.estimatedPomodoros = 1; // Estimated pomodoros needed
     }
@@ -64,7 +63,6 @@ class TodoApp {
         this.updateSortBtnText();
         this.keyboard();
         this.renderTasks(true);
-
         this.pomodoroTimer = new PomodoroTimer(this);
     }
     bindUI() {
@@ -555,8 +553,8 @@ class TodoApp {
                             this.progressBar.classList.remove("pulse");
                         }, 500);
                         if (parseInt(newWidth) === 100) {
-                    animateTaskCompletion(150);
-                }
+                            animateTaskCompletion(150);
+                        }
                     }
                     this.progressBar.style.width = newWidth;
                 }
@@ -568,7 +566,6 @@ class TodoApp {
                         this.progressText.classList.remove("pulse");
                     }, 500);
                 }
-                
             }
         }
     }
@@ -998,12 +995,10 @@ class TodoApp {
     getIncompleteTasks() {
         return this.tasks.filter(task => !task.isDone);
     }
-    
     // Method to get task by title instead of ID
     getTaskByTitle(taskTitle) {
         return this.tasks.find(task => task.title === taskTitle);
     }
-    
     // Method to update task pomodoro count by title
     updateTaskPomodoroCount(taskTitle) {
         const taskIndex = this.tasks.findIndex(task => task.title === taskTitle);
@@ -1014,7 +1009,6 @@ class TodoApp {
         }
     }
 }
-
 class PomodoroTimer {
     constructor(todoApp = null) {
         this.todoApp = todoApp; // Reference to TodoApp instance
@@ -1024,36 +1018,30 @@ class PomodoroTimer {
         this.selectedTask = null;
         this.sessionCount = 0;
         this.timer = null;
-        
         // Phase durations in seconds (editable)
         this.phaseDurations = {
             focus: 25 * 60,
             shortBreak: 5 * 60,
             longBreak: 15 * 60
         };
-        
         this.initializeEventListeners();
         this.loadTimerSettings();
         this.initializeTimeSettings();
     }
-    
     initializeEventListeners() {
         // Modal controls
         const openPomodoroBtn = document.getElementById('openPomodoro');
         const closePomodoroBtn = document.getElementById('closePomodoroBtn');
-        
         if (openPomodoroBtn) {
             openPomodoroBtn.addEventListener('click', () => this.openModal());
         }
         if (closePomodoroBtn) {
             closePomodoroBtn.addEventListener('click', () => this.closeModal());
         }
-        
         // Timer controls
         const startPauseBtn = document.getElementById('startPauseBtn');
         const skipBtn = document.getElementById('skipBtn');
         const changeTaskBtn = document.getElementById('changeTaskBtn');
-        
         if (startPauseBtn) {
             startPauseBtn.addEventListener('click', () => this.toggleTimer());
         }
@@ -1063,7 +1051,6 @@ class PomodoroTimer {
         if (changeTaskBtn) {
             changeTaskBtn.addEventListener('click', () => this.showTaskSelection());
         }
-        
         // ESC key to close modal
         document.addEventListener('keydown', (e) => {
             const modal = document.getElementById('pomoModal');
@@ -1071,11 +1058,9 @@ class PomodoroTimer {
                 this.closeModal();
             }
         });
-        
         // Time setting controls
         this.initializeTimeControls();
     }
-    
     openModal() {
         const modal = document.getElementById('pomoModal');
         if (modal) {
@@ -1083,7 +1068,6 @@ class PomodoroTimer {
             this.showTaskSelection();
         }
     }
-    
     closeModal() {
         const modal = document.getElementById('pomoModal');
         if (modal) {
@@ -1091,29 +1075,23 @@ class PomodoroTimer {
             this.pauseTimer();
         }
     }
-    
     showTaskSelection() {
         const taskPhase = document.getElementById('taskSelectionPhase');
         const timerPhase = document.getElementById('timerPhase');
-        
         if (taskPhase && timerPhase) {
             taskPhase.classList.remove('hidden');
             taskPhase.classList.add('fade-in');
             timerPhase.classList.add('hidden');
-            
             // Populate task options from TodoApp
             this.populateTaskOptions();
         }
     }
-    
     // New method to populate task options from TodoApp
     populateTaskOptions() {
         const taskContainer = document.querySelector('#taskSelectionPhase .space-y-3');
         if (!taskContainer || !this.todoApp) return;
-        
         const incompleteTasks = this.todoApp.getIncompleteTasks();
         taskContainer.innerHTML = '';
-        
         if (incompleteTasks.length === 0) {
             taskContainer.innerHTML = `
                 <div class="text-center py-8 text-gray-500">
@@ -1123,7 +1101,6 @@ class PomodoroTimer {
                     </button>
                 </div>
             `;
-            
             // Add event listener for quick task creation
             const addTaskBtn = document.getElementById('addTaskFromPomodoro');
             if (addTaskBtn) {
@@ -1137,12 +1114,10 @@ class PomodoroTimer {
             }
             return;
         }
-        
         incompleteTasks.forEach(task => {
             const taskElement = document.createElement('div');
             taskElement.className = 'task-option border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-colors';
             taskElement.setAttribute('data-task-title', task.title);
-            
             // Create priority indicators
             let priorityBadges = '';
             if (task.isUrgent && task.isImportant) {
@@ -1152,13 +1127,8 @@ class PomodoroTimer {
             } else if (task.isImportant) {
                 priorityBadges = '<span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Important</span>';
             }
-            
             // Create tags display
-            const tagsHtml = task.tags && task.tags.length > 0 ? 
-                task.tags.map(tag => 
-                    `<span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">${typeof tag === 'string' ? tag : tag.name || 'Tag'}</span>`
-                ).join(' ') : '';
-            
+            const tagsHtml = task.tags && task.tags.length > 0 ? task.tags.map(tag => `<span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">${typeof tag === 'string' ? tag : tag.name || 'Tag'}</span>`).join(' ') : '';
             // Format due date
             let dueDateHtml = '';
             if (task.dueDate) {
@@ -1166,7 +1136,6 @@ class PomodoroTimer {
                 const today = new Date();
                 const diffTime = dueDate - today;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
                 if (diffDays === 0) {
                     dueDateHtml = '<span class="text-sm text-red-600">Due: Today</span>';
                 } else if (diffDays === 1) {
@@ -1177,7 +1146,6 @@ class PomodoroTimer {
                     dueDateHtml = '<span class="text-sm text-red-600">Overdue</span>';
                 }
             }
-            
             taskElement.innerHTML = `
                 <div class="flex items-center justify-between">
                     <div class="flex-1">
@@ -1196,23 +1164,19 @@ class PomodoroTimer {
                     </div>
                 </div>
             `;
-            
             taskElement.addEventListener('click', () => this.selectTask(taskElement));
             taskContainer.appendChild(taskElement);
         });
     }
-    
     // Initialize time settings display and controls
     initializeTimeSettings() {
         this.updateTimeSettingsDisplay();
     }
-    
     // Initialize time editing controls
     initializeTimeControls() {
         const focusTimeEl = document.getElementById('focusTime');
         const shortBreakTimeEl = document.getElementById('short-break-time');
         const longBreakTimeEl = document.getElementById('long-break-time');
-        
         // Make time elements editable
         if (focusTimeEl) {
             this.makeTimeEditable(focusTimeEl, 'focus');
@@ -1224,12 +1188,10 @@ class PomodoroTimer {
             this.makeTimeEditable(longBreakTimeEl, 'longBreak');
         }
     }
-    
     // Make time elements clickable and editable
     makeTimeEditable(element, phase) {
         element.style.cursor = 'pointer';
         element.title = 'Click to edit';
-        
         element.addEventListener('click', () => {
             const currentMinutes = Math.floor(this.phaseDurations[phase] / 60);
             const input = document.createElement('input');
@@ -1239,31 +1201,25 @@ class PomodoroTimer {
             input.value = currentMinutes;
             input.className = 'w-16 text-center text-2xl font-bold bg-transparent border-b-2 border-gray-300 focus:border-blue-500 outline-none';
             input.style.color = element.style.color || getComputedStyle(element).color;
-            
             const originalText = element.textContent;
             element.textContent = '';
             element.appendChild(input);
             input.focus();
             input.select();
-            
             const finishEditing = () => {
                 const newMinutes = parseInt(input.value) || currentMinutes;
                 this.phaseDurations[phase] = newMinutes * 60;
-                
                 // Update display
                 element.textContent = newMinutes;
-                
                 // Update current timer if we're editing the current phase
                 if (this.currentPhase === phase && !this.isRunning) {
                     this.timeLeft = this.phaseDurations[phase];
                     this.updateTimerDisplay();
                     this.updateProgress();
                 }
-                
                 // Save to localStorage
                 this.saveTimerSettings();
             };
-            
             input.addEventListener('blur', finishEditing);
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
@@ -1274,13 +1230,11 @@ class PomodoroTimer {
             });
         });
     }
-    
     // Update time settings display
     updateTimeSettingsDisplay() {
         const focusTimeEl = document.getElementById('focusTime');
         const shortBreakTimeEl = document.getElementById('short-break-time');
         const longBreakTimeEl = document.getElementById('long-break-time');
-        
         if (focusTimeEl) {
             focusTimeEl.textContent = Math.floor(this.phaseDurations.focus / 60);
         }
@@ -1291,58 +1245,50 @@ class PomodoroTimer {
             longBreakTimeEl.textContent = Math.floor(this.phaseDurations.longBreak / 60);
         }
     }
-    
     // Save timer settings to localStorage
     saveTimerSettings() {
         localStorage.setItem('pomodoroSettings', JSON.stringify(this.phaseDurations));
     }
-    
     // Load timer settings from localStorage
     loadTimerSettings() {
         const savedSettings = localStorage.getItem('pomodoroSettings');
         if (savedSettings) {
-            this.phaseDurations = { ...this.phaseDurations, ...JSON.parse(savedSettings) };
+            this.phaseDurations = {
+                ...this.phaseDurations,
+                ...JSON.parse(savedSettings)
+            };
             this.timeLeft = this.phaseDurations[this.currentPhase];
             this.updateTimeSettingsDisplay();
         }
     }
-    
     showTimerPhase() {
         const taskPhase = document.getElementById('taskSelectionPhase');
         const timerPhase = document.getElementById('timerPhase');
-        
         if (taskPhase && timerPhase) {
             taskPhase.classList.add('hidden');
             timerPhase.classList.remove('hidden');
             timerPhase.classList.add('fade-in');
-            
             this.updateTimerDisplay();
             this.updatePhaseDisplay();
         }
     }
-    
     selectTask(taskElement) {
         const taskTitle = taskElement.getAttribute('data-task-title');
         const taskTitleEl = taskElement.querySelector('h4');
         const taskDescEl = taskElement.querySelector('p');
-        
-        this.selectedTask = { 
-            title: taskTitle, 
+        this.selectedTask = {
+            title: taskTitle,
             displayTitle: taskTitleEl ? taskTitleEl.textContent : taskTitle,
             description: taskDescEl ? taskDescEl.textContent : 'No description'
         };
-        
         // Update selected task display
         const selectedTaskTitle = document.getElementById('selectedTaskTitle');
         const selectedTaskDesc = document.getElementById('selectedTaskDesc');
-        
         if (selectedTaskTitle) selectedTaskTitle.textContent = this.selectedTask.displayTitle;
         if (selectedTaskDesc) selectedTaskDesc.textContent = this.selectedTask.description;
-        
         // Transition to timer phase
         setTimeout(() => this.showTimerPhase(), 200);
     }
-    
     toggleTimer() {
         if (this.isRunning) {
             this.pauseTimer();
@@ -1350,7 +1296,6 @@ class PomodoroTimer {
             this.startTimer();
         }
     }
-    
     startTimer() {
         this.isRunning = true;
         const startPauseBtn = document.getElementById('startPauseBtn');
@@ -1362,24 +1307,20 @@ class PomodoroTimer {
             startPauseBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
             startPauseBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
         }
-        
         // Add pulse animation to timer
         const progressRing = document.querySelector('.progress-ring');
         if (progressRing) {
             progressRing.classList.add('pulse-gentle');
         }
-        
         this.timer = setInterval(() => {
             this.timeLeft--;
             this.updateTimerDisplay();
             this.updateProgress();
-            
             if (this.timeLeft <= 0) {
                 this.completePhase();
             }
         }, 1000);
     }
-    
     pauseTimer() {
         this.isRunning = false;
         const startPauseBtn = document.getElementById('startPauseBtn');
@@ -1390,62 +1331,49 @@ class PomodoroTimer {
             startPauseBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
             startPauseBtn.classList.add('bg-red-500', 'hover:bg-red-600');
         }
-        
         // Remove pulse animation
         const progressRing = document.querySelector('.progress-ring');
         if (progressRing) {
             progressRing.classList.remove('pulse-gentle');
         }
-        
         if (this.timer) {
             clearInterval(this.timer);
             this.timer = null;
         }
     }
-    
     skipPhase() {
         this.pauseTimer();
         this.completePhase();
     }
-    
     completePhase() {
         this.pauseTimer();
-        
         if (this.currentPhase === 'focus') {
             this.sessionCount++;
-            
             // Update task pomodoro count in TodoApp
             if (this.todoApp && this.selectedTask) {
                 this.todoApp.updateTaskPomodoroCount(this.selectedTask.title);
             }
-            
             // After 4 focus sessions, take a long break
             this.currentPhase = (this.sessionCount % 4 === 0) ? 'longBreak' : 'shortBreak';
         } else {
             this.currentPhase = 'focus';
         }
-        
         this.timeLeft = this.phaseDurations[this.currentPhase];
         this.updateTimerDisplay();
         this.updatePhaseDisplay();
         this.updateSessionProgress();
-        
         // Show completion notification
         this.showPhaseCompletionNotification();
     }
-    
     // New method to show phase completion notification
     showPhaseCompletionNotification() {
         if (Notification && Notification.permission === 'granted') {
             new Notification(`Pomodoro ${this.currentPhase === 'focus' ? 'Break' : 'Focus'} Time!`, {
-                body: this.currentPhase === 'focus' 
-                    ? 'Time to focus on your task' 
-                    : 'Take a well-deserved break',
+                body: this.currentPhase === 'focus' ? 'Time to focus on your task' : 'Take a well-deserved break',
                 icon: '🍅'
             });
         }
     }
-    
     updateTimerDisplay() {
         const timerDisplay = document.getElementById('timerDisplay');
         if (timerDisplay) {
@@ -1455,25 +1383,20 @@ class PomodoroTimer {
             timerDisplay.textContent = display;
         }
     }
-    
     updateProgress() {
         const totalTime = this.phaseDurations[this.currentPhase];
         const progress = (totalTime - this.timeLeft) / totalTime;
         const circumference = 2 * Math.PI * 54; // radius = 54
         const offset = circumference - (progress * circumference);
-        
         const progressCircle = document.getElementById('progressCircle');
         if (progressCircle) {
             progressCircle.style.strokeDashoffset = offset;
         }
     }
-    
     updatePhaseDisplay() {
         const phaseElement = document.getElementById('currentPhase');
         const progressCircle = document.getElementById('progressCircle');
-        
         if (!phaseElement || !progressCircle) return;
-        
         switch (this.currentPhase) {
             case 'focus':
                 phaseElement.textContent = 'Focus Time';
@@ -1491,23 +1414,19 @@ class PomodoroTimer {
                 progressCircle.style.stroke = '#3b82f6';
                 break;
         }
-        
         // Reset progress circle
         this.updateProgress();
     }
-    
     updateSessionProgress() {
         const completedElement = document.getElementById('completedSessions');
         if (completedElement) {
             completedElement.textContent = `${this.sessionCount} completed today`;
         }
-        
         const sessionElement = document.getElementById('sessionCount');
         if (sessionElement) {
             const currentSession = (this.sessionCount % 4) + 1;
             sessionElement.textContent = `Session ${currentSession} of 4`;
         }
-        
         // Update session dots
         const dots = document.querySelectorAll('.session-dot');
         dots.forEach((dot, index) => {
@@ -1520,7 +1439,6 @@ class PomodoroTimer {
             }
         });
     }
-    
     // Method to request notification permission
     requestNotificationPermission() {
         if (Notification && Notification.permission === 'default') {
@@ -1528,7 +1446,6 @@ class PomodoroTimer {
         }
     }
 }
-
 
 function animateTaskCompletion(amount) {
     // Create a celebratory animation when tasks are completed
@@ -1589,11 +1506,9 @@ document.head.appendChild(styleElement);
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize TodoApp first
     const todoApp = new TodoApp();
-    
     // Request notification permission for Pomodoro timer
     if (todoApp.pomodoroTimer) {
         todoApp.pomodoroTimer.requestNotificationPermission();
     }
-    
     window.todoApp = todoApp;
 });
