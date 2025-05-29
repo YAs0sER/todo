@@ -1,0 +1,29 @@
+<!--Card style-->
+
+<div class="relative break-inside-avoid bg-[#FFF9DE] p-6 rounded-2xl">
+  <div class="absolute top-3 right-4 text-xl font-bold text-gray-600 hover:text-gray-900 group">
+    <button aria-label="Options">⋮</button>
+    <div class="hidden group-hover:block absolute right-0 mt-1 bg-white border rounded shadow-md z-10">
+        <button class="block w-full px-4 py-2 text-left hover:bg-gray-100 edit-btn">Edit</button>
+        <button class="block w-full px-4 py-2 text-left hover:bg-gray-100 delete-btn">Delete</button>
+    </div>
+</div>  <main class="mb-5">
+    <h2 class="text-2xl mb-3">Task title</h2>
+    <p class="text-gray-800">Longer content that varies between cards so that height is different…</p>
+  </main>
+  <footer class="flex justify-between items-end">
+    <div class="flex gap-2">
+      
+    </div>
+    <div>
+      <input type="checkbox" id="isDone" />
+      <label for="isDone1">Done</label>
+    </div>
+  </footer>
+</div>
+
+<!--Filter button style-->
+<button class="shrink-0 py-2 px-3 flex items-center gap-2 border-0 hover:bg-gray-200 rounded-2xl">
+<div class="bg-green-500 w-[25px] h-[25px] rounded-full shrink-0"></div>
+<span class="text-[15px]">Personal</span>
+</button>

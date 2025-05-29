@@ -1,0 +1,81 @@
+
+
+*{
+    margin:0;
+    background-color: beige;
+}
+.sideBar{
+    width: 20%;
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: solid grey 1px;
+}
+.sideBar hr{
+    background-color: black;
+    width: 70%;
+    margin-bottom: 10px;
+}
+.sideBar section{
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+#tag-filter{
+    height: 75vh;
+}
+/*une tailwind better*/
+.statusFil{
+    align-self: center;
+    width: 75%;
+    padding: 10px;
+    border-radius: 100px;
+}
+.statusFil option{
+    padding: 5px;
+    margin-left: 5px;
+    position: relative;
+}
+.statusFil option::before{
+    content: "";
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    left: 5px;
+    background-color: brown;
+}
+
+.filterButton{
+    width: 75%;
+    padding: 7px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap:10px;
+    border: none;
+}
+.filterButton .color{
+    background-color: yellowgreen;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.head{
+    display: flex;
+    padding: 20px;
+}
+.head button{
+    margin-left: auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
