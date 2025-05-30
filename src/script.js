@@ -17,7 +17,7 @@ class Task {
         this.createdAt = new Date();
         this.dueDate = null;
         this.pomodoroSessions = 0; // Track completed pomodoro sessions
-        this.estimatedPomodoros = 1; // Estimated pomodoros needed
+        this.estimatedPomodoros = 1; // Estimated pomodoros needed: to be implemented later
     }
 }
 // Task manager
@@ -58,7 +58,7 @@ class TodoApp {
         this.loadFromLocalStorage();
         this.bindUI();
         this.renderTagFilters();
-        //add sort methodes here
+        //sort methods
         this.sortTasks();
         this.updateSortBtnText();
         this.keyboard();
@@ -991,7 +991,7 @@ class TodoApp {
             this.renderTasks();
         }
     }
-    //pomo
+    
     getIncompleteTasks() {
         return this.tasks.filter(task => !task.isDone);
     }
